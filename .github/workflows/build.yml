@@ -55,7 +55,7 @@ jobs:
 
       # Run tests
       - name: Run tests
-        run: dotnet test ${{ github.workspace }}/tests/MyLogicAppTests/MyLogicAppTests.sln --no-restore --verbosity normal --logger "trx"
+        run: dotnet test ${{ github.workspace }}/tests/MyLogicAppTests/MyLogicAppTests.csproj --no-restore --verbosity normal --logger "trx"
 
       # Publish artefacts and test results
       - name: Publish test log
