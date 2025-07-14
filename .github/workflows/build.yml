@@ -28,10 +28,10 @@ jobs:
 
       # Build .NET solution
       - name: Restore dependencies
-        run: dotnet restore ${{ github.workspace }}/tests/MyLogicAppTests/MyLogicAppTests.sln
+        run: dotnet restore ${{ github.workspace }}/tests/MyLogicAppTests/MyLogicAppTests.csproj
 
       - name: Build
-        run: dotnet build ${{ github.workspace }}/tests/MyLogicAppTests/MyLogicAppTests.sln --no-restore
+        run: dotnet build ${{ github.workspace }}/tests/MyLogicAppTests/MyLogicAppTests.csproj --no-restore
 
       - name: Install Functions Core tools
         run: 'npm install -g azure-functions-core-tools@4 --unsafe-perm true'
