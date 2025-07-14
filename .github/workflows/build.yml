@@ -40,8 +40,24 @@ jobs:
         run: 'npm install -g azurite@3.34.0'
 
       - name: Start Azurite services
-        run: 'azurite &'
+        run: 'azurite --silent --location azurite-data --debug azurite-debug.log &'
         shell: bash
+
+      - name: Wait for Azurite to be ready
+        run: |
+          echo "Waiting for Azurite to start..."
+          for i in {1..30}; do
+            if curl -f http://127.0.0.1:10000/ >/dev/null 2>&1; then
+              echo "Azurite is ready!"
+              break
+            fi
+            echo "Attempt $i/30: Azurite not ready yet, waiting..."
+            sleep 2
+          done
+          # Verify all services are running
+          curl -f http://127.0.0.1:10000/ || { echo "Blob service not ready"; exit 1; }
+          curl -f http://127.0.0.1:10001/ || { echo "Queue service not ready"; exit 1; }
+          curl -f http://127.0.0.1:10002/ || { echo "Table service not ready"; exit 1; }
 
       # Check software versions
       - name: Check dotnet SDK installation
