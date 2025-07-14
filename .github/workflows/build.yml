@@ -55,7 +55,12 @@ jobs:
 
       # Run tests
       - name: Run tests
-        run: dotnet test tests/MyLogicAppTests/MyLogicAppTests.csproj --no-restore --verbosity normal --logger "trx" --results-directory tests/MyLogicAppTests/TestResults
+        run: dotnet test tests/MyLogicAppTests/MyLogicAppTests.csproj --no-restore --verbosity normal --logger "trx;LogFileName=TestResults.trx" --results-directory tests/MyLogicAppTests/TestResults
+
+      # Debug: List generated test files
+      - name: List test result files
+        run: find tests/MyLogicAppTests -name "*.trx" -o -name "*.log" | head -20
+        if: always()
 
       # Publish artefacts and test results
       - name: Publish test log
