@@ -22,21 +22,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Install Azure Functions Core Tools via apt
-      - name: Install Azure Functions Core Tools
-        run: |
-          apt update && \
-          apt install -y gpg wget && \
-          wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > /usr/share/keyrings/microsoft-prod.gpg && \
-          wget -q https://packages.microsoft.com/config/debian/12/prod.list && \
-          mv prod.list /etc/apt/sources.list.d/microsoft-prod.list && \
-          chown root:root /usr/share/keyrings/microsoft-prod.gpg && \
-          chown root:root /etc/apt/sources.list.d/microsoft-prod.list && \
-          apt update && \
-          apt install -y azure-functions-core-tools-4 libicu-dev && \
-          chmod +x /usr/lib/azure-functions-core-tools-4/in-proc6/func && \
-          chmod +x /usr/lib/azure-functions-core-tools-4/in-proc8/func && \
-          rm -rf /var/lib/apt/lists/*
+      # Setup Node.js (required for Azure Functions Core Tools and Azurite)
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
 
       # Build .NET solution
       - name: Restore dependencies
@@ -45,9 +35,15 @@ jobs:
       - name: Build
         run: dotnet build tests/MyLogicAppTests/MyLogicAppTests.csproj --no-restore
 
+      - name: Install Functions Core tools
+        run: 'npm install -g azure-functions-core-tools@4 --unsafe-perm true'
+
       # Check software versions
       - name: Check dotnet SDK installation
         run: 'dotnet --info'
+
+      - name: Check node installation
+        run: 'node --version'
 
       - name: Check Functions Core tools installation
         run: 'func --version'
