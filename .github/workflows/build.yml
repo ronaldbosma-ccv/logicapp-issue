@@ -15,6 +15,14 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/dotnet/sdk:8.0-bookworm-slim
+    
+    services:
+      azurite:
+        image: mcr.microsoft.com/azure-storage/azurite:3.34.0
+        ports:
+          - 10000:10000
+          - 10001:10001
+          - 10002:10002
 
     steps:
       - name: Checkout
@@ -35,13 +43,6 @@ jobs:
 
       - name: Install Functions Core tools
         run: 'npm install -g azure-functions-core-tools@4 --unsafe-perm true'
-
-      - name: Install Azurite
-        run: 'npm install -g azurite@3.34.0'
-
-      - name: Start Azurite services
-        run: 'azurite --silent --location azurite-data --debug azurite-debug.log &'
-        shell: bash
 
       # Check software versions
       - name: Check dotnet SDK installation
