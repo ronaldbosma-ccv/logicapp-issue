@@ -57,11 +57,6 @@ jobs:
       - name: Run tests
         run: dotnet test tests/MyLogicAppTests/MyLogicAppTests.csproj --no-restore --verbosity normal -- --report-trx --report-trx-filename TestResults.trx
 
-      # Debug: List generated test files
-      - name: List test result files
-        run: find tests/MyLogicAppTests -name "*.trx" -o -name "*.log" | head -20
-        if: always()
-
       # Publish artefacts and test results
       - name: Publish test log
         uses: actions/upload-artifact@v4
