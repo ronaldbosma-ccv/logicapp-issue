@@ -66,14 +66,3 @@ jobs:
           path: |
             tests/MyLogicAppTests/TestResults/*.trx
             tests/MyLogicAppTests/**/TestResults.trx
-
-      - name: Publish test results
-        if: (success() || failure()) && github.event_name != 'pull_request'
-        uses: dorny/test-reporter@v2
-        with:
-          name: Test Results
-          path: |
-            tests/MyLogicAppTests/TestResults/*.trx
-            tests/MyLogicAppTests/**/TestResults.trx
-          path-replace-backslashes: true
-          reporter: dotnet-trx
