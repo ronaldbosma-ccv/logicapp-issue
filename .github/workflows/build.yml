@@ -2,12 +2,6 @@ name: MyLogicApp-Build
 
 on:
   push:
-    branches:
-      - main
-      - 'features/**'
-  pull_request:
-    branches:
-      - main
   workflow_dispatch:
 
 jobs:
