@@ -27,4 +27,7 @@
     <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="testConfiguration.json" CopyToOutputDirectory="Always" />
+  </ItemGroup>
 </Project>
