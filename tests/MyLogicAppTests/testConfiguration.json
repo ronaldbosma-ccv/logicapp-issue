@@ -3,7 +3,7 @@
         "builtInConnectorsToMock": [ "sendMessage", "completeTopicMessageV2" ]
     },
     "azurite": {
-        "enableAzuritePortCheck": true
+        "enableAzuritePortCheck": false
     },
     "logging": {
         "writeFunctionRuntimeStartupLogs": true,
