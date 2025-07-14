@@ -54,6 +54,9 @@ jobs:
       - name: Check Functions Core tools installation
         run: 'func --version'
 
+      - name: Check PATH
+        run: "echo $PATH | tr ':' '\n'"
+
       # Run tests
       - name: Run tests
         run: dotnet test tests/MyLogicAppTests/MyLogicAppTests.csproj --no-restore --verbosity normal -- --report-trx --report-trx-filename TestResults.trx
