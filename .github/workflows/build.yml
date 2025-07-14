@@ -79,6 +79,4 @@ jobs:
         if: success() || failure()
         with:
           name: test-results
-          path: |
-            tests/MyLogicAppTests/TestResults/*.trx
-            tests/MyLogicAppTests/**/TestResults.trx
+          path: tests/MyLogicAppTests/TestResults/*.trx
