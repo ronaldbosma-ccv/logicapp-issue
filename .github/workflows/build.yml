@@ -28,10 +28,10 @@ jobs:
 
       # Build .NET solution
       - name: Restore dependencies
-        run: dotnet restore ${{ github.workspace }}/tests/MyLogicAppTests/MyLogicAppTests.csproj
+        run: dotnet restore tests/MyLogicAppTests/MyLogicAppTests.csproj
 
       - name: Build
-        run: dotnet build ${{ github.workspace }}/tests/MyLogicAppTests/MyLogicAppTests.csproj --no-restore
+        run: dotnet build tests/MyLogicAppTests/MyLogicAppTests.csproj --no-restore
 
       - name: Install Functions Core tools
         run: 'npm install -g azure-functions-core-tools@4 --unsafe-perm true'
@@ -55,7 +55,7 @@ jobs:
 
       # Run tests
       - name: Run tests
-        run: dotnet test ${{ github.workspace }}/tests/MyLogicAppTests/MyLogicAppTests.csproj --no-restore --verbosity normal --logger "trx"
+        run: dotnet test tests/MyLogicAppTests/MyLogicAppTests.csproj --no-restore --verbosity normal --logger "trx"
 
       # Publish artefacts and test results
       - name: Publish test log
@@ -63,13 +63,13 @@ jobs:
         if: success() || failure()
         with:
           name: test-results
-          path: ${{ github.workspace }}/tests/MyLogicAppTests/TestResults/*.trx
+          path: tests/MyLogicAppTests/TestResults/*.trx
 
       - name: Publish test results
         if: (success() || failure()) && github.event_name != 'pull_request'
         uses: dorny/test-reporter@v2
         with:
           name: Test Results
-          path: ${{ github.workspace }}/tests/MyLogicAppTests/TestResults/*.trx
+          path: tests/MyLogicAppTests/TestResults/*.trx
           path-replace-backslashes: true
           reporter: dotnet-trx
