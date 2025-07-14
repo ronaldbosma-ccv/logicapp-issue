@@ -55,7 +55,7 @@ jobs:
 
       # Run tests
       - name: Run tests
-        run: dotnet test tests/MyLogicAppTests/MyLogicAppTests.csproj --no-restore --verbosity normal --logger "trx;LogFileName=TestResults.trx" --results-directory tests/MyLogicAppTests/TestResults
+        run: dotnet test tests/MyLogicAppTests/MyLogicAppTests.csproj --no-restore --verbosity normal -- --report-trx --report-trx-filename TestResults.trx
 
       # Debug: List generated test files
       - name: List test result files
@@ -68,13 +68,17 @@ jobs:
         if: success() || failure()
         with:
           name: test-results
-          path: tests/MyLogicAppTests/TestResults/*.trx
+          path: |
+            tests/MyLogicAppTests/TestResults/*.trx
+            tests/MyLogicAppTests/**/TestResults.trx
 
       - name: Publish test results
         if: (success() || failure()) && github.event_name != 'pull_request'
         uses: dorny/test-reporter@v2
         with:
           name: Test Results
-          path: tests/MyLogicAppTests/TestResults/*.trx
+          path: |
+            tests/MyLogicAppTests/TestResults/*.trx
+            tests/MyLogicAppTests/**/TestResults.trx
           path-replace-backslashes: true
           reporter: dotnet-trx
