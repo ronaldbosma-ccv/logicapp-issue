@@ -1,0 +1,75 @@
+name: MyLogicApp-Build
+
+on:
+  push:
+    branches:
+      - main
+      - 'features/**'
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  Build:
+    runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/dotnet/sdk:8.0-bookworm-slim
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Setup Node.js (required for Azure Functions Core Tools and Azurite)
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      # Build .NET solution
+      - name: Restore dependencies
+        run: dotnet restore ${{ github.workspace }}/tests/MyLogicAppTests/MyLogicAppTests.sln
+
+      - name: Build
+        run: dotnet build ${{ github.workspace }}/tests/MyLogicAppTests/MyLogicAppTests.sln --no-restore
+
+      - name: Install Functions Core tools
+        run: 'npm install -g azure-functions-core-tools@4 --unsafe-perm true'
+
+      - name: Install Azurite
+        run: 'npm install -g azurite@3.34.0'
+
+      - name: Start Azurite services
+        run: 'azurite &'
+        shell: bash
+
+      # Check software versions
+      - name: Check dotnet SDK installation
+        run: 'dotnet --info'
+
+      - name: Check node installation
+        run: 'node --version'
+
+      - name: Check Functions Core tools installation
+        run: 'func --version'
+
+      # Run tests
+      - name: Run tests
+        run: dotnet test ${{ github.workspace }}/tests/MyLogicAppTests/MyLogicAppTests.sln --no-restore --verbosity normal --logger "trx"
+
+      # Publish artefacts and test results
+      - name: Publish test log
+        uses: actions/upload-artifact@v4
+        if: success() || failure()
+        with:
+          name: test-results
+          path: ${{ github.workspace }}/tests/MyLogicAppTests/TestResults/*.trx
+
+      - name: Publish test results
+        if: (success() || failure()) && github.event_name != 'pull_request'
+        uses: dorny/test-reporter@v2
+        with:
+          name: Test Results
+          path: ${{ github.workspace }}/tests/MyLogicAppTests/TestResults/*.trx
+          path-replace-backslashes: true
+          reporter: dotnet-trx

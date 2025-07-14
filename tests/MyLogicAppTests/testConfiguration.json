@@ -1,0 +1,12 @@
+{
+    "workflow": {
+        "builtInConnectorsToMock": [ "sendMessage", "completeTopicMessageV2" ]
+    },
+    "azurite": {
+        "enableAzuritePortCheck": true
+    },
+    "logging": {
+        "writeFunctionRuntimeStartupLogs": true,
+        "writeMockRequestMatchingLogs": true
+    }
+}
